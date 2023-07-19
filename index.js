@@ -53,6 +53,14 @@ const findUserById = async (id) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    return await User.find({});
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getUserLog = async (userid, from = new Date(0), to = new Date()) => {
   try {
     return await Exercise.find({ 
@@ -116,6 +124,7 @@ app.post('/api/users/:_id/exercises', bodyparser.urlencoded({ extended: true}), 
 
 
 app.get('/api/users/:_id/logs', async (req, res) => {
+  // return exercise log for the provided user id
   try {
     const existingUser = await findUserById(req.params._id); 
     if (existingUser) {
@@ -143,7 +152,15 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err});
   }
+});
 
+app.get('/api/users/', async (req, res) => {
+  // return list of all users 
+  try {
+    res.json( await getAllUsers());
+  } catch (err) {
+    res.status(500).json({ error: err});
+  }
 });
 
 
